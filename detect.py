@@ -17,14 +17,14 @@ def draw_boxes(image, objects_detected, labels):
         y0 = bounding_box.ymin
         y1 = bounding_box.ymax
         canvas.rectangle([(x0, y0), (x1, y1)], outline='red')
-        canvas.text((x0 + 10, y0 + 10), "%s\n%.3f"%(labels.get(id, score)), fill="red")
+        canvas.text((x0 + 10, y0 + 10), "%s\n%.3f" % (labels.get(id,id), score), fill="red")
 
 
 def main():
-    model_path = "aurimas/model/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite"
-    labels_path = "aurimas/model/labels.txt"
-    input_image_path = "../images/input.jpeg"
-    output_image_path = "../images/output.jpeg"
+    model_path = "../model/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite"
+    labels_path = "../model/coco_labels.txt"
+    input_image_path = "../images/input.jpg"
+    output_image_path = "../images/output.jpg"
     threshold = .4
     number_objects = 5
 
@@ -34,7 +34,7 @@ def main():
     labels = read_label_file(labels_path)
 
     image = Image.open(input_image_path)
-    _ , scale = common.set_resized_input(interpreter, image.size, lambda size : image.resize(size, Image.ANTIALIAS))
+    _, scale = common.set_resized_input(interpreter, image.size, lambda size : image.resize(size, Image.ANTIALIAS))
 
     for _ in range(number_objects):
         interpreter.invoke()
