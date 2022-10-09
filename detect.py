@@ -18,14 +18,15 @@ def draw_boxes(image, objects_detected, labels):
         y1 = bounding_box.ymax
         canvas.rectangle([(x0, y0), (x1, y1)], outline='red')
         canvas.text((x0 + 10, y0 + 10), "%s\n%.3f"%(labels.get(id, score)), fill="red")
-    
+
 
 def main():
-    model_path = ""
-    labels_path = ""
-    input_image_path = ""
-    output_image_path = ""
+    model_path = "aurimas/model/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite"
+    labels_path = "aurimas/model/labels.txt"
+    input_image_path = "../images/input.jpeg"
+    output_image_path = "../images/output.jpeg"
     threshold = .4
+    number_objects = 5
 
     interpreter = make_interpreter(model_path)
     interpreter.allocate_tensors()
@@ -33,9 +34,9 @@ def main():
     labels = read_label_file(labels_path)
 
     image = Image.open(input_image_path)
-    scale = common.set_resized_input(interpreter, image.size, lambda size : image.resize(size, Image.ANTIALIAS))
+    _ , scale = common.set_resized_input(interpreter, image.size, lambda size : image.resize(size, Image.ANTIALIAS))
 
-    for _ in range(args.count):
+    for _ in range(number_objects):
         interpreter.invoke()
         objects_detected = detect.get_objects(interpreter, threshold, scale)
 
@@ -48,6 +49,7 @@ def main():
     image = image.convert("RGB")
     draw_boxes(image, objects_detected, labels)
     image.save(output_image_path)
+    image.show()
     
 
 if __name__ == "__main__":
