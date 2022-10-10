@@ -56,9 +56,6 @@ class Detector:
 
         if not objects_detected:
             print("No objects were detected")
-        else:
-            for object in objects_detected:
-                print(self.labels.get(object.id, object.id))
 
         #Drawing bounding boxes on images
         image = image.convert("RGB")
