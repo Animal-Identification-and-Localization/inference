@@ -12,8 +12,8 @@ class Detector:
         self.labels_path = labels_path
         self.threshold = threshold
         self.number_objects = 10
-        interpreter = make_interpreter(model_path)
-        interpreter.allocate_tensors()
+        self.interpreter = make_interpreter(model_path)
+        self.interpreter.allocate_tensors()
         self.labels = read_label_file(labels_path)
 
     def draw_boxes(image, objects_detected, labels):
