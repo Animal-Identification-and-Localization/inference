@@ -16,7 +16,7 @@ class Detector:
         self.interpreter.allocate_tensors()
         self.labels = read_label_file(labels_path)
 
-    def draw_boxes(image, objects_detected, labels):
+    def draw_boxes(self, image, objects_detected, labels):
         canvas = ImageDraw.Draw(image)
         for object in objects_detected:
             bounding_box = object.bbox
