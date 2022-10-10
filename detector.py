@@ -41,7 +41,7 @@ class Detector:
             y1 = bounding_box.ymax
             label = labels.get(id, id)
             list_entry = [label, score, x0, x1, y0, y1]
-            object_list.push(list_entry)
+            object_list.append(list_entry)
         return object_list
 
     def run_detection(self, input_image_path, output_image_path):
