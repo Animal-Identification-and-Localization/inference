@@ -21,21 +21,25 @@ def draw_boxes(image, objects_detected, labels):
 
 
 def main():
+    #Setting variables
     model_path = "../model/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite"
     labels_path = "../model/coco_labels.txt"
-    input_image_path = "../images/input.jpg"
-    output_image_path = "../images/output.jpg"
+    input_image_path = "../images/cats2.jpg"
+    output_image_path = "../images/output2.jpg"
     threshold = .4
-    number_objects = 5
+    number_objects = 10
 
+    #Creating Model and Allocating Tensors
     interpreter = make_interpreter(model_path)
     interpreter.allocate_tensors()
 
     labels = read_label_file(labels_path)
 
+    #Rescaling Image
     image = Image.open(input_image_path)
     _, scale = common.set_resized_input(interpreter, image.size, lambda size : image.resize(size, Image.ANTIALIAS))
 
+    #Running detection
     for _ in range(number_objects):
         interpreter.invoke()
         objects_detected = detect.get_objects(interpreter, threshold, scale)
@@ -46,6 +50,7 @@ def main():
         for object in objects_detected:
             print(labels.get(object.id, object.id))
 
+    #Drawing bounding boxes on images
     image = image.convert("RGB")
     draw_boxes(image, objects_detected, labels)
     image.save(output_image_path)
